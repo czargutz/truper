@@ -1,0 +1,17 @@
+.Login{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.Card{
+  padding: 60px 20px;
+  width: 400px;
+  height: 500px;
+  box-shadow: 3px 3px 10px 0px #888;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}

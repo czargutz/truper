@@ -1,0 +1,11 @@
+.ItemCard{
+  padding: 20px;
+  border: 1px solid #EEE;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 3px 3px 7px 3px #EEE;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
