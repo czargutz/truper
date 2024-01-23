@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import ItemCard from "../../components/ItemCard";
 
 import styles from "./index.module.scss";
 
+import { addQualityData } from "../../reducer";
+
 function Home() {
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+
+  const defaultData = useSelector((state) => state.defaultReducer.data);
+  const sessionData = useSelector((state) => state.defaultReducer.session);
 
   const handleGetConditions = () => {
     fetch("https://api.datos.gob.mx/v1/calidadAire", { method: "GET" })
       .then((response) => {
-        response.json().then(({ pagination, results }) => {
+        response.json().then(({ results }) => {
           setLoading(false);
-          setData(results);
+          dispatch(addQualityData(results));
         });
       })
       .catch((error) => {
@@ -22,7 +30,11 @@ function Home() {
   };
 
   useEffect(() => {
-    handleGetConditions();
+    if (!sessionData) {
+      navigation("/");
+    } else {
+      handleGetConditions();
+    }
   }, []);
 
   return (
@@ -30,11 +42,11 @@ function Home() {
       {loading && "Cargando...."}
       {!loading && (
         <div className={styles.Container}>
-          {data.map(({ stations }) => {
+          {defaultData.map(({ stations }, index) => {
             const { id, name, location, measurements, indexes } = stations[0];
             return (
               <ItemCard
-                key={id}
+                key={`${id}${index}`}
                 id={id}
                 name={name}
                 location={location}

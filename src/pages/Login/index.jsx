@@ -1,27 +1,35 @@
 import React, { useState } from "react";
+import Alert from "@mui/material/Alert";
+import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import styles from "./index.module.scss";
 
 import { users } from "./constants";
 
+import { saveSession } from "../../reducer";
+
 function Login() {
+  const dispatch = useDispatch();
   const navigation = useNavigate();
 
   const [form, setForm] = useState({});
+  const [error, setError] = useState(null);
 
   const handleOnChange = (event) =>
     setForm({ ...form, [event.target.name]: event.target.value });
 
   const handleLogin = () => {
+    setError(null);
     const userBD = users.find((user) => user.user === form.user);
     if (userBD && userBD.password === form.password) {
+      dispatch(saveSession(form));
       navigation("/home");
     } else {
-      console.log("Invalid user");
+      setError("Invalid user");
     }
   };
 
@@ -53,6 +61,7 @@ function Login() {
         >
           Entrar
         </Button>
+        {error && <Alert severity="error">{error}</Alert>}
       </div>
     </div>
   );
